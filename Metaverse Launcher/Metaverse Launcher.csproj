@@ -5,6 +5,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Metaverse_Launcher</RootNamespace>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>images\icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="images\hero.gif" />
+    <None Remove="images\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\hero.gif" />
+    <Resource Include="images\icon.ico" />
+  </ItemGroup>
 
 </Project>

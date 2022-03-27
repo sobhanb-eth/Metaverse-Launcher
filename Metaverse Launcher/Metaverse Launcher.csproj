@@ -6,16 +6,19 @@
     <RootNamespace>Metaverse_Launcher</RootNamespace>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
+    <AssemblyName>Metaverse_Launcher</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="images\hero.gif" />
     <None Remove="images\icon.ico" />
+    <None Remove="images\Zarela_Menu_BackGround.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="images\hero.gif" />
     <Resource Include="images\icon.ico" />
+    <Resource Include="images\Zarela_Menu_BackGround.jpg" />
   </ItemGroup>
 
 </Project>

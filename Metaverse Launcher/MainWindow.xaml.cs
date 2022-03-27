@@ -8,18 +8,18 @@ using System.Windows;
 
 namespace Metaverse_Launcher
 {
+    enum LauncherStatus
+    {
+        ready,
+        failed,
+        downloadingGame,
+        downloadingUpdate
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    enum LauncherStatus
-        {
-            ready,
-            failed,
-            downloadingGame,
-            downloadingUpdate
-        }
-
-public partial class MainWindow : Window
+    public partial class MainWindow : Window
     {
         private string rootPath;
         private string versionFile;
@@ -50,14 +50,13 @@ public partial class MainWindow : Window
                     default:
                         break;
                 }
-
             }
-
         }
 
         public MainWindow()
         {
             InitializeComponent();
+
             rootPath = Directory.GetCurrentDirectory();
             versionFile = Path.Combine(rootPath, "Version.txt");
             gameZip = Path.Combine(rootPath, "Build.zip");
@@ -74,7 +73,7 @@ public partial class MainWindow : Window
                 try
                 {
                     WebClient webClient = new WebClient();
-                    Version onlineVersion = new Version(webClient.DownloadString("Version File Link"));
+                    Version onlineVersion = new Version(webClient.DownloadString("https://global-village.zarela.io/Version.txt"));
 
                     if (onlineVersion.IsDifferentThan(localVersion))
                     {
@@ -109,11 +108,11 @@ public partial class MainWindow : Window
                 else
                 {
                     Status = LauncherStatus.downloadingGame;
-                    _onlineVersion = new Version(webClient.DownloadString("Version File Link"));
+                    _onlineVersion = new Version(webClient.DownloadString("https://global-village.zarela.io/Version.txt"));
                 }
 
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadGameCompletedCallback);
-                webClient.DownloadFileAsync(new Uri("Game Zip Link"), gameZip, _onlineVersion);
+                webClient.DownloadFileAsync(new Uri("https://global-village.zarela.io/Build.zip"), gameZip, _onlineVersion);
             }
             catch (Exception ex)
             {
@@ -128,16 +127,19 @@ public partial class MainWindow : Window
             {
                 string onlineVersion = ((Version)e.UserState).ToString();
                 ZipFile.ExtractToDirectory(gameZip, rootPath, true);
-                File.Delete(gameZip);
+                if (File.Exists(gameZip))
+                {
+                    File.Delete(gameZip);
+                    File.WriteAllText(versionFile, onlineVersion);
 
-                File.WriteAllText(versionFile, onlineVersion);
-
-                VersionText.Text = onlineVersion;
-                Status = LauncherStatus.ready;
+                    VersionText.Text = onlineVersion;
+                    Status = LauncherStatus.ready;
+                }
             }
             catch (Exception ex)
             {
                 Status = LauncherStatus.failed;
+                VersionText.Text = "Error Fetching";
                 MessageBox.Show($"Error finishing download: {ex}");
             }
         }
@@ -166,36 +168,34 @@ public partial class MainWindow : Window
 
     struct Version
     {
-        internal static Version zero = new Version(0, 0, 0, 0);
+        internal static Version zero = new Version(0, 0, 0);
 
         private short major;
         private short minor;
         private short subMinor;
-        private short hotFix;
 
-        internal Version(short _major, short _minor, short _subMinor, short _hotfix)
+        internal Version(short _major, short _minor, short _subMinor)
         {
             major = _major;
             minor = _minor;
             subMinor = _subMinor;
-            hotFix = _hotfix;
         }
         internal Version(string _version)
         {
-            string[] _versionStrings = _version.Split('.');
-            if (_versionStrings.Length != 4)
+            string[] versionStrings = _version.Split('.');
+            if (versionStrings.Length != 3)
             {
                 major = 0;
                 minor = 0;
                 subMinor = 0;
-                hotFix = 0;
                 return;
             }
-            major = short.Parse(_versionStrings[0]);
-            minor = short.Parse(_versionStrings[1]);
-            subMinor = short.Parse(_versionStrings[2]);
-            hotFix = short.Parse(_versionStrings[3]);
+
+            major = short.Parse(versionStrings[0]);
+            minor = short.Parse(versionStrings[1]);
+            subMinor = short.Parse(versionStrings[2]);
         }
+
         internal bool IsDifferentThan(Version _otherVersion)
         {
             if (major != _otherVersion.major)
@@ -214,20 +214,14 @@ public partial class MainWindow : Window
                     {
                         return true;
                     }
-                    else
-                    {
-                        if (hotFix != _otherVersion.hotFix)
-                        {
-                            return true;
-                        }
-                    }
                 }
             }
             return false;
         }
+
         public override string ToString()
         {
-            return $"{major}.{minor}.{subMinor}.{hotFix}";
+            return $"{major}.{minor}.{subMinor}";
         }
     }
 }

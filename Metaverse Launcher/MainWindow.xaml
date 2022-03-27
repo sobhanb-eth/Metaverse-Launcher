@@ -7,10 +7,14 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         ContentRendered="Window_ContentRendered"
-        Title="Metaverse Launcher" Height="576" Width="800">
+        Title="Metaverse_Launcher" Height="576" Width="800">
     <Grid>
-        <Image Stretch="UniformToFill" Source="images/hero.gif" HorizontalAlignment="Center"></Image>
-        <TextBlock Name="VersionText" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="20" Foreground="White" Margin="0,0,5,0"></TextBlock>
-        <Button Name="PlayButton" Content="Checking for Updates" Click="PlayButton_Click" Height="60" FontSize="28" FontWeight="Bold" Foreground="#DDFFFFFF" Margin="10,0,10,20" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="300" Background="#FFFFB900"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Image Stretch="UniformToFill" Source="images/Zarela_Menu_BackGround.jpg" HorizontalAlignment="Center" Grid.RowSpan="2" Width="800"/>
+        <TextBlock Name="VersionText" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="20" Foreground="White" Margin="0,0,5,0" Text="version" Grid.Row="1"></TextBlock>
+        <Button Name="PlayButton" Content="Checking For Updates" Click="PlayButton_Click" Height="60" FontSize="28" FontWeight="Bold" Foreground="#DDFFFFFF" Margin="0,121,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="150" Background="#FFFF9700" Padding="10,1,10,1" Grid.Row="1"/>
     </Grid>
 </Window>

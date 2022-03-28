@@ -89,6 +89,10 @@ namespace Metaverse_Launcher
                     Status = LauncherStatus.failed;
                     MessageBox.Show($"Error checking for game updates: {ex}");
                 }
+                if (Status == LauncherStatus.ready || Status == LauncherStatus.failed)
+                {
+                    DownloadProgress.Text = "";
+                }
             }
             else
             {
@@ -113,12 +117,23 @@ namespace Metaverse_Launcher
 
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadGameCompletedCallback);
                 webClient.DownloadFileAsync(new Uri("https://global-village.zarela.io/Build.zip"), gameZip, _onlineVersion);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(WebClient_DownloadProgressChanged);
             }
             catch (Exception ex)
             {
                 Status = LauncherStatus.failed;
                 MessageBox.Show($"Error installing game files: {ex}");
             }
+        }
+
+        private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            DownloadProgress.Text = e.ProgressPercentage.ToString() + "%";
+            if (DownloadProgress.Text == "100%")
+            {
+                DownloadProgress.Text = "Completed!";
+            }
+           
         }
 
         private void DownloadGameCompletedCallback(object sender, AsyncCompletedEventArgs e)

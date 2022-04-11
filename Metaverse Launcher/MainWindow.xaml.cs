@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Windows;
+using System.Drawing;
 
 namespace Metaverse_Launcher
 {
@@ -36,13 +37,13 @@ namespace Metaverse_Launcher
                 switch (_status)
                 {
                     case LauncherStatus.ready:
-                        PlayButton.Content = "Play";
+                        PlayButton.Content = "Jump into Bioverse";
                         break;
                     case LauncherStatus.failed:
                         PlayButton.Content = "Update Failed - Retry";
                         break;
                     case LauncherStatus.downloadingGame:
-                        PlayButton.Content = "Downloading Game";
+                        PlayButton.Content = "Downloading Application";
                         break;
                     case LauncherStatus.downloadingUpdate:
                         PlayButton.Content = "Downloading Update";
@@ -60,7 +61,7 @@ namespace Metaverse_Launcher
             rootPath = Directory.GetCurrentDirectory();
             versionFile = Path.Combine(rootPath, "Version.txt");
             gameZip = Path.Combine(rootPath, "Build.zip");
-            gameExe = Path.Combine(rootPath, "Build", "Metaverse.exe");
+            gameExe = Path.Combine(rootPath, "Build", "Bioverse.exe");
         }
 
         private void CheckForUpdates()
@@ -178,6 +179,12 @@ namespace Metaverse_Launcher
             {
                 CheckForUpdates();
             }
+        }
+
+        private void PlayButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            PlayButton.Opacity = 100;
+            
         }
     }
 

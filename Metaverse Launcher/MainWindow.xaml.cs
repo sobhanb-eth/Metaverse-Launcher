@@ -74,7 +74,7 @@ namespace Metaverse_Launcher
                 try
                 {
                     WebClient webClient = new WebClient();
-                    Version onlineVersion = new Version(webClient.DownloadString("https://global-village.zarela.io/Version.txt"));
+                    Version onlineVersion = new Version(webClient.DownloadString("Version File Link"));
 
                     if (onlineVersion.IsDifferentThan(localVersion))
                     {
@@ -113,11 +113,11 @@ namespace Metaverse_Launcher
                 else
                 {
                     Status = LauncherStatus.downloadingGame;
-                    _onlineVersion = new Version(webClient.DownloadString("https://global-village.zarela.io/Version.txt"));
+                    _onlineVersion = new Version(webClient.DownloadString("Version File Link"));
                 }
 
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadGameCompletedCallback);
-                webClient.DownloadFileAsync(new Uri("https://global-village.zarela.io/Build.zip"), gameZip, _onlineVersion);
+                webClient.DownloadFileAsync(new Uri("Build Zip File Link"), gameZip, _onlineVersion);
                 webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(WebClient_DownloadProgressChanged);
             }
             catch (Exception ex)

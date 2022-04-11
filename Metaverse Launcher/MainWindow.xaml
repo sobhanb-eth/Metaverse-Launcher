@@ -9,14 +9,14 @@
         ContentRendered="Window_ContentRendered"
         Background="#181120"
         Title="Bioverse Launcher 0.0.3-Alpha" Height="576" Width="800" ResizeMode="NoResize">
-    
-    
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="13*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Image Stretch="UniformToFill" Source="images/Zarela_Menu_BackGround.jpg" HorizontalAlignment="Left" Width="800" Margin="-10,-110,0,64" StretchDirection="Both"/>
+        <Image Stretch="UniformToFill" Source="images/Zarela_Menu_BackGround.jpg" HorizontalAlignment="Center" Width="800" Margin="0,-110,0,64" StretchDirection="Both"/>
         <TextBlock Name="VersionText" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="20" Foreground="#FF847D8E" Margin="0,0,363,14" Text="version" Grid.Row="1"></TextBlock>
         <TextBlock Name="DownloadProgress" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="15" Foreground="White" Margin="0,109,0,0" Text="Progress" Grid.Row="1"></TextBlock>
         <Button Style="{DynamicResource RoundButton}" Name="PlayButton" Content="Checking For Updates" Click="PlayButton_Click" Height="60" FontSize="28" FontWeight="Bold" Foreground="#DDFFFFFF" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="150" Padding="10,1,10,1" Grid.Row="1" Margin="0,10,0,0" FontFamily="Open Sans" Width="492" MouseEnter="PlayButton_MouseEnter" >
@@ -25,5 +25,5 @@
             </Button.Background>
         </Button>
     </Grid>
-    
+
 </Window>

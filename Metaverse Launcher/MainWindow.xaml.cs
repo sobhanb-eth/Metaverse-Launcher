@@ -37,16 +37,20 @@ namespace Metaverse_Launcher
                 switch (_status)
                 {
                     case LauncherStatus.ready:
-                        PlayButton.Content = "Jump into Bioverse";
+                        PlayButton.Content = "Start";
+                        StatusText.Text = "Welcome to Bioverse";
                         break;
                     case LauncherStatus.failed:
-                        PlayButton.Content = "Update Failed - Retry";
+                        PlayButton.Content = "Retry";
+                        StatusText.Text = "Update Failed";
                         break;
                     case LauncherStatus.downloadingGame:
-                        PlayButton.Content = "Downloading Application";
+                        PlayButton.Content = "";
+                        StatusText.Text = "Downloading Application:";
                         break;
                     case LauncherStatus.downloadingUpdate:
-                        PlayButton.Content = "Downloading Update";
+                        PlayButton.Content = "";
+                        StatusText.Text = "Downloading Updates:";
                         break;
                     default:
                         break;
@@ -57,6 +61,9 @@ namespace Metaverse_Launcher
         public MainWindow()
         {
             InitializeComponent();
+            PlayButton.Visibility = Visibility.Hidden;
+            DownloadProgressBar.Visibility = Visibility.Visible;
+            BorderProgress.Visibility = Visibility.Visible;
 
             rootPath = Directory.GetCurrentDirectory();
             versionFile = Path.Combine(rootPath, "Version.txt");
@@ -83,16 +90,31 @@ namespace Metaverse_Launcher
                     else
                     {
                         Status = LauncherStatus.ready;
+                        
+                        DownloadProgressBar.Visibility = Visibility.Hidden;
+                        BorderProgress.Visibility = Visibility.Hidden;
                     }
                 }
                 catch (Exception ex)
                 {
                     Status = LauncherStatus.failed;
+                    PlayButton.Visibility = Visibility.Visible;
                     MessageBox.Show($"Error checking for game updates: {ex}");
                 }
                 if (Status == LauncherStatus.ready || Status == LauncherStatus.failed)
                 {
                     DownloadProgress.Text = "";
+                    if (Status == LauncherStatus.ready)
+                    {
+                        DownloadProgressBar.Visibility = Visibility.Hidden;
+                        BorderProgress.Visibility = Visibility.Hidden;
+                        PlayButton.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        DownloadProgressBar.Visibility = Visibility.Visible;
+                        BorderProgress.Visibility = Visibility.Visible;
+                    }
                 }
             }
             else
@@ -117,22 +139,34 @@ namespace Metaverse_Launcher
                 }
 
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadGameCompletedCallback);
-                webClient.DownloadFileAsync(new Uri("Build Zip File Link"), gameZip, _onlineVersion);
+                webClient.DownloadFileAsync(new Uri("Game File Link/Build.zip"), gameZip, _onlineVersion);
                 webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(WebClient_DownloadProgressChanged);
             }
             catch (Exception ex)
             {
                 Status = LauncherStatus.failed;
+                DownloadProgressBar.Visibility = Visibility.Visible;
+                BorderProgress.Visibility = Visibility.Visible;
+                PlayButton.Visibility = Visibility.Visible;
                 MessageBox.Show($"Error installing game files: {ex}");
             }
         }
 
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            double bytesIn = double.Parse(e.BytesReceived.ToString());
+            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            double percentage = bytesIn / totalBytes * 100;
+            DownloadProgressBar.Value = int.Parse(Math.Truncate(percentage).ToString());
+
             DownloadProgress.Text = e.ProgressPercentage.ToString() + "%";
             if (DownloadProgress.Text == "100%")
             {
                 DownloadProgress.Text = "Completed!";
+                DownloadProgressBar.Visibility = Visibility.Hidden;
+                BorderProgress.Visibility = Visibility.Hidden;
+                PlayButton.Visibility = Visibility.Visible;
+                DownloadProgress.Text = "";
             }
            
         }
@@ -150,11 +184,16 @@ namespace Metaverse_Launcher
 
                     VersionText.Text = onlineVersion;
                     Status = LauncherStatus.ready;
+                    DownloadProgressBar.Visibility = Visibility.Hidden;
+                    BorderProgress.Visibility = Visibility.Hidden;
+                    PlayButton.Visibility = Visibility.Visible;
+
                 }
             }
             catch (Exception ex)
             {
                 Status = LauncherStatus.failed;
+                PlayButton.Visibility = Visibility.Visible;
                 VersionText.Text = "Error Fetching";
                 MessageBox.Show($"Error finishing download: {ex}");
             }
@@ -169,6 +208,9 @@ namespace Metaverse_Launcher
         {
             if (File.Exists(gameExe) && Status == LauncherStatus.ready)
             {
+                DownloadProgressBar.Visibility = Visibility.Hidden;
+                BorderProgress.Visibility = Visibility.Hidden;
+                PlayButton.Visibility = Visibility.Visible;
                 ProcessStartInfo startInfo = new ProcessStartInfo(gameExe);
                 startInfo.WorkingDirectory = Path.Combine(rootPath, "Build");
                 Process.Start(startInfo);
@@ -184,7 +226,6 @@ namespace Metaverse_Launcher
         private void PlayButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             PlayButton.Opacity = 100;
-            
         }
     }
 

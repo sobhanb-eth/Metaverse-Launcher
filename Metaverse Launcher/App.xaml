@@ -11,5 +11,13 @@
                 </Style>
             </Style.Resources>
         </Style>
+        <Style TargetType="ProgressBar" x:Key="RoundProgressBar">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        
     </Application.Resources>
 </Application>
